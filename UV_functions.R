@@ -37,7 +37,8 @@ correctIC50 <- function(IC50Rawframe) {
     
 }
 
-fitResponseCurve <- function(targetFrame, controlFrame, fitFunc=LL.2()) {
+fitDualResponseCurve <- function(targetFrame, controlFrame, 
+  fitFunc=LL.2()) {
   
   targetFit <- drm(response ~ conc, data=targetFrame, fct=fitFunc)
   controlFit <- drm(response ~ conc, data=controlFrame, fct=fitFunc)
@@ -49,7 +50,7 @@ fitResponseCurve <- function(targetFrame, controlFrame, fitFunc=LL.2()) {
 
 }
 
-plotResponseCurve <- function (fitList) {
+plotDualResponseCurve <- function (fitList) {
   
   plot(fitList$target, col='red', pch=19, type='average', cex=.8)
   plot(fitList$target, col='red', pch=19, type='bars', add=T, lty='blank')
@@ -58,4 +59,11 @@ plotResponseCurve <- function (fitList) {
   plot(fitList$control, col='blue', pch=19, type='bars', add=T, lty='blank')
   abline(v=fitList$controlIC50, col='blue')
 
+}
+
+plotSingleResponseCurve <- function(fitObj) {
+  
+  plot(fitObj, col='red', pch=19, type='average', cex=.8, add=T)
+  plot(fitObj, col='red', pch=19, type='bars', add=T, lty='blank')
+  abline(v=fitObj$targetIC50['e:(Intercept)'], col='red')
 }
