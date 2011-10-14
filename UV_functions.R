@@ -50,6 +50,14 @@ fitDualResponseCurve <- function(targetFrame, controlFrame,
 
 }
 
+plotResponseCurve <- function(fitObj, title='test') {
+   
+   plot(fitObj, col='red', pch=19, type='obs', cex=.8, 
+    main=title)
+   plot(fitObj, col='red', pch=19, type='bars', add=T)
+
+}
+
 plotDualResponseCurve <- function (fitList) {
   
   plot(fitList$target, col='red', pch=19, type='average', cex=.8)
@@ -66,4 +74,41 @@ plotSingleResponseCurve <- function(fitObj) {
   plot(fitObj, col='red', pch=19, type='average', cex=.8, add=T)
   plot(fitObj, col='red', pch=19, type='bars', add=T, lty='blank')
   abline(v=fitObj$targetIC50['e:(Intercept)'], col='red')
+}
+
+getFitInfoFrame <- function (fitList, sampleInfo) {
+  
+  all.IC50 <- unlist(lapply(fitList, function(x) {
+    return(coef(x)['e:(Intercept)'])}))
+  names(all.IC50) <- gsub('[.]e[:][(]Intercept[)]', '', names(all.IC50))
+  all.RSE <- unlist(lapply(fitList, function(x) {
+    return(summary(x)$rseMat[1,1])}))
+  
+  all.IC50.frame <- data.frame(IC50=all.IC50, RSE=all.RSE)
+  rownames(all.IC50.frame) <- names(all.IC50)
+
+  returnFrame <- merge(all.IC50.frame, sampleInfo, by='row.names')
+  returnFrame$type <- gsub('[_].*$|[0-9]{1,2}[.].*$', '',
+    returnFrame$sampID)
+
+  return(returnFrame)
+}
+
+correctIC50 <- function(IC50Frame) {
+  
+  .corrSeriesFrame <- function(seriesFrame) {
+    
+    RMCEval <- mean(seriesFrame$IC50[
+      grepl('RMCE', seriesFrame$sampID)])
+    seriesFrame$IC50corr <- seriesFrame$IC50 / RMCEval
+    return(seriesFrame)
+  }
+
+  # Split the data according to series
+
+  seriesList <- split(IC50Frame, f=IC50Frame$series)
+  seriesList.corr <- lapply(seriesList, .corrSeriesFrame)
+
+  return(Reduce(f=rbind, x=seriesList.corr))
+
 }
