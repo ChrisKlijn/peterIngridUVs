@@ -94,7 +94,7 @@ getFitInfoFrame <- function (fitList, sampleInfo) {
   return(returnFrame)
 }
 
-correctIC50 <- function(IC50Frame) {
+normalizeIC50 <- function(IC50Frame) {
   
   .corrSeriesFrame <- function(seriesFrame) {
     

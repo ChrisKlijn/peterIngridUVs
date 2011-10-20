@@ -12,20 +12,9 @@ library(reshape)
 library(drc)
 source('~/codeChris/smallProjects/peterIngridUV/UV_functions.R')
 
-# Load raw files
-
 setwd("/home/klijn/data/smallproj/UVs/rawData")
-filesIC50 <- dir(pattern='.txt')
-IC50List <- loadIC50files(filevect=filesIC50)
 
-# Background subtraction and data shaping
-IC50List.corr <- lapply(IC50List, correctIC50)
-
-# Load sampleinfo
-
-setwd("/home/klijn/data/smallproj/UVs")
-sampleInfo <- read.delim('sampleinfo.csv', stringsAsFactors=F, sep=',')
-row.names(sampleInfo) <- sampleInfo$sampID
+load('IC50DataRaw.Rda')
 
 fitList <- fitDualResponseCurve(targetFrame=IC50List.corr[[1]], controlFrame=IC50List.corr[[2]])
 
@@ -73,7 +62,7 @@ infoFrame <- getFitInfoFrame(allFit, sampleInfo)
 
 qplot(data=subset(infoFrame, grepl('RMCE|Brca', sampID)), x=as.factor(series), y=IC50, color=type, geom='boxplot')
 
-# Correct the IC50s
+# normalize the IC50s to the RMCE
 
 infoFrame.corr <- correctIC50(infoFrame)
 
