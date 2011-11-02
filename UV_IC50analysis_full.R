@@ -26,7 +26,14 @@ infoFrame <- getFitInfoFrame(allFit, sampleInfo)
 
 # normalize the IC50s to the RMCE
 
+# Simple RMCE scaling
 infoFrame.corr <- normalizeIC50(infoFrame)
+
+# Linear model for RMCE to Brca1
+infoFrame$type <- ordered(infoFrame$type, c('RMCE', 'hBrca1', 'UV'))
+normList <- split(infoFrame, infoFrame$series)
+infoFrame.corrLin <- 
+  Reduce(f=rbind, lapply(normList, normalizeIC50linear))
 
 # Fit the data, excluding the first measurement
 
@@ -62,6 +69,21 @@ dev.off()
 
 png(file="Figures/full_jitter_corrIC50.png", width=500, height=500)
 qplot(data=infoFrame.corr, x=type, y=IC50corr, color=type, size=RSE, geom='jitter')
+
+# Plots for the linear normalization
+png(file="Figures/full_RMCE_Brca_UV_normLin_boxplot.png", 
+  width=800, height=500)
+qplot(data=infoFrame.corrLin, x=as.factor(series), y=IC50, color=type, geom='boxplot')
+dev.off()
+
+png(file="Figures/full_density_corrLinIC50.png", width=500, height=500)
+qplot(data=infoFrame.corrLin, x=IC50, fill=type, alpha=I(.5), 
+  geom='density')
+dev.off()
+
+png(file="Figures/full_jitter_corrLinIC50.png", width=500, height=500)
+qplot(data=infoFrame.corrLin, x=type, y=IC50, color=type, size=RSE, geom='jitter')
+dev.off()
 
 # Check the poor fits
 poorFits <- subset(infoFrame.corr, RSE > .10)

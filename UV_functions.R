@@ -101,6 +101,7 @@ normalizeIC50 <- function(IC50Frame) {
     RMCEval <- mean(seriesFrame$IC50[
       grepl('RMCE', seriesFrame$sampID)])
     seriesFrame$IC50corr <- seriesFrame$IC50 / RMCEval
+
     return(seriesFrame)
   }
 
@@ -111,4 +112,15 @@ normalizeIC50 <- function(IC50Frame) {
 
   return(Reduce(f=rbind, x=seriesList.corr))
 
+}
+
+normalizeIC50linear <- function(IC50Frame) {
+
+  subData <- subset(IC50Frame, grepl('RMCE|Brca', sampID))
+  tempLM <- lm(data=subData, IC50 ~ type)
+  IC50Frame$IC50 <- (IC50Frame$IC50 - coef(tempLM)[1]) / 
+    coef(tempLM)[2]
+  
+  return(IC50Frame)
+  
 }

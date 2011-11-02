@@ -96,3 +96,30 @@ infoFrame.corr$pPath <- pnorm(q=infoFrame.corr$distPath + path['mu'],
   mean=path['mu'], sd=path['sigma'], lower.tail=F)
 infoFrame.corr$pNonPath <- pnorm(q=infoFrame.corr$distNonPath + 
   nonpath['mu'], mean=nonpath['mu'], sd=nonpath['sigma'], lower.tail=F)
+
+
+##
+
+
+a <- rnorm(n=10, .5)
+b <- rnorm(n=10, 2.2)
+
+infoFrame$type <- ordered(infoFrame$type, c('RMCE', 'hBrca1', 'UV'))
+normList <- split(infoFrame, infoFrame$series)
+infoFrame.corrLin <- 
+  Reduce(f=rbind, lapply(normList, normalizeIC50linear))
+
+tempCorrIC50 <- function(Data) {
+
+  subData <- subset(Data, grepl('RMCE|Brca', sampID))
+  tempLM <- lm(data=subData, IC50 ~ type)
+  subData$IC50 <- (subData$IC50 - coef(tempLM)[1]) / coef(tempLM)[2]
+  
+  return(subData)
+
+}
+
+testCorr <- Reduce(f=rbind, lapply(testList, tempCorrIC50))
+
+qplot(data=testCorr, x=as.factor(series), y=IC50, color=type, geom='boxplot')
+plot(0,0, type='n', xlim=c(-1,1), ylim=c(-1,1))
