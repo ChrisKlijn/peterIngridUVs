@@ -49,6 +49,13 @@ infoFrame.ex1 <- getFitInfoFrame(allFit.ex1, sampleInfo)
 
 infoFrame.ex1.corr <- normalizeIC50(infoFrame.ex1)
 
+# Pvalues 
+
+infoFrame.corrLin <- calcBayesProb(infoFrame.corrLin)
+
+# Export to text
+
+write.table(x=infoFrame.corrLin, file="IC50analysis.txt", col.names=TRUE,  quote=FALSE, row.names=FALSE, sep='\t')
 
 # Plots
 
@@ -69,8 +76,10 @@ dev.off()
 
 png(file="Figures/full_jitter_corrIC50.png", width=500, height=500)
 qplot(data=infoFrame.corr, x=type, y=IC50corr, color=type, size=RSE, geom='jitter')
+dev.off()
 
-# Plots for the linear normalization
+## Plots for the linear normalization
+
 png(file="Figures/full_RMCE_Brca_UV_normLin_boxplot.png", 
   width=800, height=500)
 qplot(data=infoFrame.corrLin, x=as.factor(series), y=IC50, color=type, geom='boxplot')
@@ -83,6 +92,22 @@ dev.off()
 
 png(file="Figures/full_jitter_corrLinIC50.png", width=500, height=500)
 qplot(data=infoFrame.corrLin, x=type, y=IC50, color=type, size=RSE, geom='jitter')
+dev.off()
+
+png(file="Figures/full_pvaljit_corrLinIC50.png", width=500, height=500)
+qplot(data=infoFrame.corrLin, x=type, y=IC50corr, color=type, shape=Pval > .05, size=RSE, geom='jitter')
+dev.off()
+
+# Comparison lineair to non-normalized and simple normalized
+
+png(file="Figures/norm_comparison.png", width=800, height=500)
+par(mfrow=c(1,3))
+boxplot(infoFrame.corrLin$IC50 ~ infoFrame.corrLin$type, 
+  main='normal IC50')
+boxplot(infoFrame.corr$IC50corr ~ infoFrame.corrLin$type, 
+  main='Simple norm')
+boxplot(infoFrame.corrLin$IC50corr ~ infoFrame.corrLin$type, 
+  main='Lineair norm')
 dev.off()
 
 # Check the poor fits

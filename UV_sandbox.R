@@ -12,7 +12,7 @@ library(reshape)
 library(drc)
 source('~/codeChris/smallProjects/peterIngridUV/UV_functions.R')
 
-setwd("/home/klijn/data/smallproj/UVs/rawData")
+setwd("/home/klijn/data/smallproj/UVs")
 
 load('IC50DataRaw.Rda')
 

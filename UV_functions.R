@@ -118,9 +118,29 @@ normalizeIC50linear <- function(IC50Frame) {
 
   subData <- subset(IC50Frame, grepl('RMCE|Brca', sampID))
   tempLM <- lm(data=subData, IC50 ~ type)
-  IC50Frame$IC50 <- (IC50Frame$IC50 - coef(tempLM)[1]) / 
+  IC50Frame$IC50corr <- (IC50Frame$IC50 - coef(tempLM)[1]) / 
     coef(tempLM)[2]
   
   return(IC50Frame)
   
+}
+
+calcBayesProb <- function(IC50FrameCorr) {
+  
+  prior <- 0.5
+  x <- IC50FrameCorr$IC50corr
+  mu <- 
+    tapply(infoFrame.corrLin$IC50corr, infoFrame.corrLin$type, mean)
+  sigma <- 
+    tapply(infoFrame.corrLin$IC50corr, infoFrame.corrLin$type, sd)
+
+  probs_path <- 
+    (1-pnorm(x,mean=mu['RMCE'], sd=sigma['RMCE'])) * prior
+  probs_nonpath <- 
+    (pnorm(x,mean=mu['hBrca1'], sd=sigma['hBrca1'])) * prior
+  
+  IC50FrameCorr$Pval <- probs_path/(probs_path + probs_nonpath)
+  
+  return(IC50FrameCorr)
+
 }
