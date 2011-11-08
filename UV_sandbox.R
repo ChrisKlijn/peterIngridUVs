@@ -123,3 +123,13 @@ testCorr <- Reduce(f=rbind, lapply(testList, tempCorrIC50))
 
 qplot(data=testCorr, x=as.factor(series), y=IC50, color=type, geom='boxplot')
 plot(0,0, type='n', xlim=c(-1,1), ylim=c(-1,1))
+
+UVs <- subset(infoFrame.corrLin, )
+gsub('^.*[_]','', UVs$sampID)
+UVs$rep <- ''
+UVs$UV <- ''
+for (i in 1:nrow(UVs)) {
+  UVs$rep[i] <- strsplit(UVs$sampID[i], split='_')[[1]][2]
+  UVs$UV[i] <- strsplit(UVs$sampID[i], split='_')[[1]][1]
+}
+
