@@ -39,14 +39,10 @@ infoFrame.corrLin <-
 
 IC50List.corr.ex1 <- lapply(IC50List.corr, function (x) {
   return(x[x$conc != 0,])})
-
 allFit.ex1 <- lapply(IC50List.corr.ex1, function (x) { 
   drm(response ~ conc, data=x, fct=LL.2())})
-
 infoFrame.ex1 <- getFitInfoFrame(allFit.ex1, sampleInfo)
-
 # normalize the IC50s to the RMCE
-
 infoFrame.ex1.corr <- normalizeIC50(infoFrame.ex1)
 
 # Pvalues 
