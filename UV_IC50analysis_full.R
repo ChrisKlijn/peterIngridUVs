@@ -11,7 +11,7 @@
 library(reshape)
 library(drc)
 library(ggplot2)
-source('~/codeChris/smallProjects/peterIngridUV/UV_functions.R')
+source('~/gitCodeChris/peterIngridUV/UV_functions.R')
 
 setwd("/home/klijn/data/smallproj/UVs/")
 

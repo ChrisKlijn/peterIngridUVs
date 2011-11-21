@@ -10,7 +10,7 @@
 # Libraries and functions
 library(reshape)
 library(drc)
-source('~/codeChris/smallProjects/peterIngridUV/UV_functions.R')
+source('~/gitCodeChris/peterIngridUV/UV_functions.R')
 
 setwd("/home/klijn/data/smallproj/UVs")
 

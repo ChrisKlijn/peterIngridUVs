@@ -7,7 +7,7 @@
 
 # Libraries and functions
 library(reshape)
-source('~/codeChris/smallProjects/peterIngridUV/UV_functions.R')
+source('~/gitCodeChris/peterIngridUV/UV_functions.R')
 
 # Load raw files
 
