@@ -10,7 +10,7 @@
 # Libraries and functions
 library(reshape)
 library(drc)
-source('~/gitCodeChris/peterIngridUV/UV_functions.R')
+source('~/gitCodeChris/peterIngridUVs/UV_functions.R')
 
 setwd("~/work/Matlab/Data/NKI Data/PeterIngridUV/")
 

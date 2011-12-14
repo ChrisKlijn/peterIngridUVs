@@ -11,7 +11,7 @@
 library(reshape)
 library(drc)
 library(ggplot2)
-source('~/gitCodeChris/peterIngridUV/UV_functions.R')
+source('~/gitCodeChris/peterIngridUVs/UV_functions.R')
 
 setwd("~/work/Matlab/Data/NKI Data/PeterIngridUV/")
 
