@@ -20,8 +20,8 @@ IC50List.corr <- lapply(IC50List, correctIC50)
 
 # Load sampleinfo
 
-setwd("/home/klijn/data/smallproj/UVs")
-sampleInfo <- read.delim('sampleinfo2.txt', stringsAsFactors=F, sep=',')
-row.names(sampleInfo) <- sampleInfo$sampID
+setwd("~/work/Matlab/Data/NKI Data/PeterIngridUV/")
+sampleInfo <- read.delim('sampleinfo2.txt', stringsAsFactors=F, sep='\t')
+row.names(sampleInfo) <- sampleInfo$filename
 
 save(file='IC50DataRaw2.Rda', list=c('sampleInfo', 'IC50List.corr'))

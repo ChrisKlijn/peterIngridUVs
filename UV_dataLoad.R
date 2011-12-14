@@ -21,7 +21,7 @@ IC50List.corr <- lapply(IC50List, correctIC50)
 
 # Load sampleinfo
 
-setwd("/home/klijn/data/smallproj/UVs")
+setwd("~/work/Matlab/Data/NKI Data/PeterIngridUV/rawData/")
 sampleInfo <- read.delim('sampleinfo.csv', stringsAsFactors=F, sep=',')
 row.names(sampleInfo) <- sampleInfo$sampID
 

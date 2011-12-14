@@ -1,8 +1,10 @@
-# UV_IC50analysis_full.R
+# UV_IC50analysis_1.R
 # -------------------------------------------------------------------
 # Copyright 2011 Christiaan Klijn <c.klijn@nki.nl>
 # Project: BRCA1 Unclassified Variants
-# Description: Analysis of IC50 data using all measurements
+# Description: Analysis of IC50 data using all measurements.
+#              This is the first analysis performed on the first
+#              sets of data.
 # -------------------------------------------------------------------
 
 # Run locally
