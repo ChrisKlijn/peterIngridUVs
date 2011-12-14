@@ -5,13 +5,15 @@
 # Description: Load IC50 data
 # -------------------------------------------------------------------
 
+# Run locally
+
 # Libraries and functions
 library(reshape)
 source('~/gitCodeChris/peterIngridUV/UV_functions.R')
 
 # Load raw files
 
-setwd("/home/klijn/data/smallproj/UVs/rawData")
+setwd("~/work/Matlab/Data/NKI Data/PeterIngridUV/rawData/")
 filesIC50 <- dir(pattern='.txt')
 IC50List <- loadIC50files(filevect=filesIC50)
 

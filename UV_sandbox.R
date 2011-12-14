@@ -5,14 +5,14 @@
 # Description: Sandbox code
 # -------------------------------------------------------------------
 
-# Medoid
+# Run locally
 
 # Libraries and functions
 library(reshape)
 library(drc)
 source('~/gitCodeChris/peterIngridUV/UV_functions.R')
 
-setwd("/home/klijn/data/smallproj/UVs")
+setwd("~/work/Matlab/Data/NKI Data/PeterIngridUV/")
 
 load('IC50DataRaw.Rda')
 
