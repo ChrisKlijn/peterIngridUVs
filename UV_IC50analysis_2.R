@@ -18,6 +18,28 @@ setwd("~/work/Matlab/Data/NKI Data/PeterIngridUV/")
 
 load('IC50DataRaw2.Rda')
 
+# Remove excluded experiments from sampleInfo
+
+sampleInfo <- sampleInfo[!(sampleInfo$exclude == 1),]
+
+# Check if the info and data for all UVs is present
+
+sum(sampleInfo$sampID %in% names(IC50List.corr)) == nrow(sampleInfo)
+sum(names(IC50List.corr) %in% sampleInfo$sampID) == 
+  length(IC50List.corr)
+
+# Series 8 data, remove the first (faulty) measurement
+
+series8sampID <- sampleInfo$sampID[sampleInfo$series == 8]
+for (s in series8sampID) {
+  # Remove the faulty measurements
+  IC50List.corr[[s]] <- IC50List.corr[[s]][-c(1,2,3),]
+  # Rescale data to the first measurement point
+  IC50List.corr[[s]]$response <- 
+    IC50List.corr[[s]]$response/
+    mean(IC50List.corr[[s]]$response[c(1,2,3)])
+}
+
 # Fit the data
 
 allFit <- lapply(IC50List.corr, function (x) { drm(response ~ conc, 
@@ -34,6 +56,17 @@ infoFrame.corrLin <-
 
 # Pvalues 
 infoFrame.corrLin <- calcBayesProb(infoFrame.corrLin)
+infoFrame.corrLin$PvalCorr <- p.adjust(infoFrame.corrLin$Pval, 
+  method='BH')
+infoFrame.corrLin$PvalPath <- infoFrame.corrLin$PvalCorr > 0.05
+
+# Some checks
+
+with(infoFrame.corrLin, table(status, series))
+with(subset(infoFrame.corrLin, status == 'bad_duplo'), 
+  table(UVID, PvalPath))
+with(subset(infoFrame.corrLin, status == 'bad_fit'), 
+  table(UVID, PvalPath))
 
 # Export to text
 write.table(x=infoFrame.corrLin, file="IC50analysis2.txt", col.names=TRUE,  quote=FALSE, row.names=FALSE, sep='\t')
@@ -42,23 +75,23 @@ write.table(x=infoFrame.corrLin, file="IC50analysis2.txt", col.names=TRUE,  quot
 
 ## Plots to check the normalization
 
-png(file="Figures/2_RMCE_Brca_UV_normLin_boxplot.png", 
-  width=800, height=500)
-qplot(data=infoFrame.corrLin, x=as.factor(series), y=IC50, color=type, geom='boxplot')
-dev.off()
+# Check the RSE per experiment
+qplot(data=infoFrame.corrLin, x=as.factor(series), y=RSE, color=type, geom='boxplot')
+ggsave("Figures/2_RSEcheck.png")
+ggsave("Figures/2_RSEcheck.eps")
 
-png(file="Figures/2_density_corrLinIC50.png", width=500, height=500)
-qplot(data=infoFrame.corrLin, x=IC50, fill=type, alpha=I(.5), 
-  geom='density')
-dev.off()
+qplot(data=infoFrame.corrLin, x=as.factor(series), y=IC50corr, color=type, geom='boxplot')
+ggsave("Figures/2_IC50corr_check.png")
+ggsave("Figures/2_IC50corr_check.eps")
 
-png(file="Figures/2_jitter_corrLinIC50.png", width=500, height=500)
-qplot(data=infoFrame.corrLin, x=type, y=IC50, color=type, size=RSE, geom='jitter')
-dev.off()
-
-png(file="Figures/2_pvaljit_corrLinIC50.png", width=500, height=500)
 qplot(data=infoFrame.corrLin, x=type, y=IC50corr, color=type, shape=Pval > .05, size=RSE, geom='jitter')
-dev.off()
+ggsave("Figures/2_jitterplotIC50.png")
+ggsave("Figures/2_jitterplotIC50.eps")
+
+qplot(data=infoFrame.corrLin, x=IC50, fill=type, alpha=I(.5), 
+  geom='density'
+ggsave("Figures/2_densityplotIC50.png")
+ggsave("Figures/2_densityplotIC50.eps")
 
 # Comparison lineair to non-normalized and simple normalized
 
