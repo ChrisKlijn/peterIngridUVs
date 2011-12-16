@@ -88,8 +88,8 @@ qplot(data=infoFrame.corrLin, x=type, y=IC50corr, color=type, shape=Pval > .05, 
 ggsave("Figures/2_jitterplotIC50.png")
 ggsave("Figures/2_jitterplotIC50.eps")
 
-qplot(data=infoFrame.corrLin, x=IC50, fill=type, alpha=I(.5), 
-  geom='density'
+qplot(data=infoFrame.corrLin, x=IC50corr, fill=type, alpha=I(.5), 
+  geom='density')
 ggsave("Figures/2_densityplotIC50.png")
 ggsave("Figures/2_densityplotIC50.eps")
 
